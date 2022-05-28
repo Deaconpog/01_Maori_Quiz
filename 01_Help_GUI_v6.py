@@ -1,9 +1,11 @@
-""" 01_Help_GUI_v5.py
-Further improves the GUI and solved the issue where the help button
-remains disabled still even after the help screen is dismissed.
+""" 01_Help_GUI_v6.py
+All is kept how it was originally programming still functions the same
+however new GUI design has been implemented using the Azure Theme which gives
+the GUI a more futuristic and less plain look.
 """
 
 from tkinter import *
+import tkinter.ttk as ttk
 from functools import partial  # To prevent unwanted windows
 
 
@@ -13,27 +15,22 @@ class Opening:
         background_color = "White"
 
         # Quiz Main Screen GUI
-        self.main_frame = Frame(width=300, height=300,
-                                bg=background_color,
-                                pady=10)
+        self.main_frame = Frame(width=400, height=400)
         self.main_frame.grid()
 
         # Main Quiz Heading (row 0)
         self.main_quiz_label = Label(self.main_frame,
                                      text="Māori Quiz",
-                                     font=("Helvetica", "16", "bold",),
-                                     bg=background_color, padx=10,
-                                     pady=10)
+                                     font=("Helvetica", "16", "bold"),
+                                     padx=10, pady=10)
         self.main_quiz_label.grid(row=0)
 
         # Help button (row 1)
-        self.help_button = Button(self.main_frame, text="Help",
-                                  font=("Helvetica", "14"), padx=10, pady=10,
-                                  command=self.help)
-        self.help_button.grid(row=1)
+        self.help_button = ttk.Button(self.main_frame, text="Help",
+                                      command=self.help)
+        self.help_button.grid(row=1, pady=10)
 
     def help(self):
-        print("You asked for help?")
         get_help = Help(self)
         get_help.help_text.configure(text="Help text goes here")
 
@@ -54,23 +51,23 @@ class Help:
                                                            partner))
 
         # set up GUI frame
-        self.help_frame = Frame(self.help_box, width=300, bg=background)
+        self.help_frame = ttk.Frame(self.help_box, width=300)
         self.help_frame.grid()
 
         # set up help heading (row 0)
-        self.how_heading = Label(self.help_frame, text="Help/Instructions",
-                                 font="Helvetica 10 bold", bg=background)
+        self.how_heading = ttk.Label(self.help_frame, text="Help/Instructions",
+                                     font="Helvetica 10 bold")
         self.how_heading.grid(row=0)
 
         # Help text (label, row 1)
-        self.help_text = Label(self.help_frame, text="", justify=LEFT,
-                               width=40, bg=background, wrap=250)
+        self.help_text = ttk.Label(self.help_frame, text="", justify=LEFT,
+                                   width=40)
         self.help_text.grid()
 
         # Dismiss button (row 2)
-        self.dismiss_btn = Button(self.help_frame, text="Dismiss", width=10,
-                                  bg="orange", font="Helvetica 10 bold",
-                                  command=partial(self.close_help, partner))
+        self.dismiss_btn = ttk.Button(self.help_frame, text="Dismiss",
+                                      command=partial(self.close_help,
+                                                      partner))
         self.dismiss_btn.grid(row=2, pady=10)
 
     def close_help(self, partner):
@@ -83,5 +80,8 @@ class Help:
 if __name__ == "__main__":
     root = Tk()
     root.title("Māori Quiz")
+    # Importing azure theme into the GUI for new aesthetic look
+    root.tk.call("source", "azure.tcl")
+    root.tk.call("set_theme", "light")
     something = Opening()
     root.mainloop()
