@@ -1,0 +1,37 @@
+{
+    "questions": [
+        "Tangaroa, is the Maori God of... ",
+        "Which island is Maui known to have fished up? ",
+        "Kupe was a legendary polynesian explorer, what \n was said to have guarded him during his discovery \nof Aoeteroa?",
+        "The Sky Father is (God of the skies) is called... ",
+        "Mangoroa is a shark put in the sky by Maui,\n what does the shark Mangoroa form in the sky?",
+        "Ranginui is known as the Sky Father what\n else is he known as?",
+        "Paikea was known for riding which animal \n on his journey into Aoeteroa?",
+        "The Pleiades is a constellation of stars \n what is their maori name?",
+        "Which two Gods were said to have been in \n an embrace that enveloped the world in darkness?",
+        "Which God separated their parents \n from each others embrace?",
+        "Ruatepupuke discovered the art-form \n woodcarving while rescuing his son from where?",
+        "The breath of life is a very well \n known greeting, what is the name \nof this ancestral greeting?",
+        "The Maori God of earthquakes is \n known as...",
+        "What bone(s) was Maui's fishing \nhook made from",
+        "Who is the God who is the originator\n of human life in maori mythology?"
+        ],
+    "options": [
+        ["God of the sea","God of fire","God of harvest","God of war"],
+        ["The South Island","The North Island","Stewart Island","All of New Zealand"],
+        ["A Taniwha","Tangaroa","Nothing guarded him","Maui"],
+        ["Rorohiko","Rehua","Maui","Ranginui"],
+        ["Forms the clouds","The Milky Way","Rain and lightning","Stars and comets"],
+        ["Rangi (Heavens)","Ranginui (Great Heavens)","Rangiroa (Expansive Heavens)", "All of the above"],
+        ["A whale","A dolphin","A shark","A massive albatross"],
+        ["Mata-kaheru","Matariki","Te Mangoroa","Autahi"],
+        ["Ruaumoko and Ranginui","Papatuanuku and Tangaroa","Tangaroa and Rehua","Ranginui and Papatuanuku"],
+        ["Ruaumoko","Taniwha","Tane","Papatuanuku"],
+        ["On top of Mt Ruapehu","In the forest","Deep in the ocean","Underneath Mt Ruapehu"],
+        ["Hongi","Haka","Hug","High five"],
+        ["Rehua","Ranginui","Tawhirimatea","Ruaumoko"],
+        ["The bones of a giant whale","His father's (Makeatutara's) ribs","His grandmother's (Murirangawhenua's) jawbone","The jawbone of a whale"],
+        ["Maui","Rehua","Tane","Ruaumoko"]
+    ],
+    "answers": [1,2,1,4,2,4,1,2,4,3,2,1,4,3,3]
+}
