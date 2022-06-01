@@ -12,8 +12,8 @@ import random
 from functools import partial  # To prevent unwanted windows
 import re
 
-root = Tk()
-root.title("Quiz")
+maori_q = Tk()
+maori_q.title("Quiz")
 with open('quiz.JSON') as file:
     obj = json.load(file)
 question = (obj['questions'])
@@ -48,9 +48,10 @@ class Quiz:
     # This is the title of the quiz and also the question number
     def question(self, qn):
         # Title of quiz
-        t = Label(self.main_frame, text="Maori Quiz", width=50, bg="sky blue",
-                  font=("Helvetica", 20, "bold"), pady=10)
-        t.place(x=-100, y=0)
+        title = Label(self.main_frame, text="Maori Quiz", width=50,
+                      bg="sky blue",
+                      font=("Helvetica", 20, "bold"), pady=10)
+        title.place(x=-100, y=0)
         self.quest.set(str(self.qnum) + ". " + question[qn])
         # Gives which question number it is
         qn = Label(self.main_frame, textvariable=self.quest, width=60,
@@ -65,7 +66,7 @@ class Quiz:
         button = []
         y_value = 150
         while value < 4:
-            btn = Radiobutton(root, text="", variable=self.option_selected,
+            btn = Radiobutton(maori_q, text="", variable=self.option_selected,
                               value=value + 1, font=("Helvetica", 14),
                               bg="white")
             button.append(btn)
@@ -93,7 +94,7 @@ class Quiz:
         next_button.place(x=50, y=355)
         # Exit button which quits whole quiz (need to alter in final version)
         quit_button = Button(self.main_frame, text="Exit",
-                             command=root.destroy, width=10,
+                             command=maori_q.destroy, width=10,
                              bg="red", font=("Helvetica", 16, "bold"))
         quit_button.place(x=450, y=355)
 
@@ -117,19 +118,48 @@ class Quiz:
 
     # Displays the result that the user has received displays this in a
     # mini-box however and ideally needs to be on another page
+
     def display_result(self):
+        # Destroy's previous screens
+        maori_q.destroy()
+        # Stores the quiz results into variables
         score = int(self.correct / len(question) * 100)
         result = "Score:" + str(score) + "%"
         wc = len(question) - self.correct
         correct = "Number of correct answers:" + str(self.correct)
         wrong = "Number if incorrect answers:" + str(wc)
+        result_gui = Tk()
+        # Test to show it runs new screen
+        print("Results")
+        result_gui.title("Result screen")
+        result_gui.resizable(False, False)
+        result_gui.geometry("650x450")
+        result_frame = Frame(result_gui)
+        result_frame.pack(fill=BOTH, expand=YES)
+        result_title = Label(result_frame, text="Results", width=50,
+                             bg="sky blue",
+                             font=("Helvetica", 20, "bold"), pady=10)
+        result_title.place(x=-100, y=0)
 
-    def 
+        # Exit button which quits whole quiz (need to alter in final version)
+        quit_button = Button(result_frame, text="Exit",
+                             command=result_gui.destroy, width=10,
+                             bg="red", font=("Helvetica", 16, "bold"))
+        quit_button.place(x=450, y=355)
+        # Return to main menu button restarts whole code
+        next_button = Button(result_frame, text="Export Results",
+                             command=self.export, width=20,
+                             bg="orange",
+                             font=("Helvetica", 16, "bold"))
+        next_button.place(x=50, y=355)
+
+    def export(self, r_results):
+        Export(self, r_results)
 
 
 class Export:
-    def __init__(self, partner, calc_history):
-        # print(calc_history)  # For testing purposes
+    def __init__(self, partner, r_results):
+        # print(calc_history)   # For testing purposes
         background = "#a9ef99"  # Pale Green
 
         # disable export button
@@ -141,7 +171,7 @@ class Export:
         # If users press cross at the top, closes export window and 'releases'
         # export button
         self.export_box.protocol('WM_DELETE_WINDOW', partial(self.close_export,
-                                                             partner))
+                                                             r_results))
 
         # set up GUI frame
         self.export_frame = Frame(self.export_box, width=300, bg=background)
@@ -189,7 +219,7 @@ class Export:
         # Save and Cancel Buttons (row 0 of save_cancel_frame)
         self.save_button = Button(self.save_cancel_frame, text="Save",
                                   command=partial(lambda: self.save_history
-                                  (partner, calc_history)))
+                                  (partner, r_results)))
         self.save_button.grid(row=0, column=0)
 
         self.cancel_button = Button(self.save_cancel_frame, text="Cancel",
@@ -252,4 +282,4 @@ class Export:
 
 
 quiz = Quiz()
-root.mainloop()
+maori_q.mainloop()
