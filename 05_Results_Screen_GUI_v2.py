@@ -1,14 +1,14 @@
-"""" 05_Results_Screen_GUI_v1.py
+"""" 05_Results_Screen_GUI_v2.py
 Begins the quiz for the user and gives them multiple choice answers
-Version #1 - In this version the code opens a result screen there are both an
-exit and export button however only the exit button works and on the result
-screen there is also none of the user's results shown, the export button does
-not work at all and needs to be more properly worked on.
+Version #2 - In the second version of the code the export button still does not
+work however it now has a print output in order to test to see if it prints the
+results when called. The code from a previous program has also been removed to
+make testing easier.
 """
 
 from tkinter import *
-import json # Used as file to hold questions, and answers
-import random # To randomize quiz questions
+import json
+import random
 from functools import partial  # To prevent unwanted windows
 import re
 
@@ -108,8 +108,6 @@ class Quiz:
     # If the answer is correct adds a point to the total correct score
     # (self.correct)
     def next_btn(self):
-        # Adds one to the number of correct for the user if correct, and also
-        # adds one to question number
         if self.check_ans(self.qn):
             self.correct += 1
         self.qn += 1
@@ -118,39 +116,55 @@ class Quiz:
         # number of questions there are, and if so calls the display_result
         # function
         if self.qn == len(question):
-            self.display_result()
+            Display(self)
         else:
             self.quest.set(str(self.qnum) + ". " + question[self.qn])
             self.display_options(self.qn)
 
-    # Calls the export class in order to carry on export screen code
-    def export(self, r_results):
-        Export(self, r_results)
 
-    def display_result(self):
+# Have changed the display_result to a class instead allowing for more tidy
+# code and also allowing the code to be called
+class Display:
+    def __init__(self, r_results):
+        # Stores the quiz results into variables
+        score = int(r_results.correct / len(question) * 100)
+        result = "Score:" + str(score) + "%"
+        wc = len(question) - r_results.correct
+        correct = "Number of correct answers:" + str(r_results.correct)
+        wrong = "Number of incorrect answers:" + str(wc)
         # Destroys previous screens
         maori_q.destroy()
-        # Stores the quiz results into variables
-        score = int(self.correct / len(question) * 100)
-        result = "Score:" + str(score) + "%"
-        wc = len(question) - self.correct
-        correct = "Number of correct answers:" + str(self.correct)
-        wrong = "Number if incorrect answers:" + str(wc)
         result_gui = Tk()
         # Test to show it runs new screen
         print("Results")
-        # Creating the result screen
-        result_gui.title("Result screen")
         # Makes the screen a set size
+        result_gui.title("Result screen")
         result_gui.resizable(False, False)
         result_gui.geometry("650x450")
-        result_frame = Frame(result_gui)
+        result_frame = Frame(result_gui, bg="white")
         result_frame.pack(fill=BOTH, expand=YES)
-        # Main heading for the result screen
+        # Result page title
         result_title = Label(result_frame, text="Results", width=50,
                              bg="sky blue",
                              font=("Helvetica", 20, "bold"), pady=10)
         result_title.place(x=-100, y=0)
+        # Number of questions correct label
+        result_correct = Label(result_frame, text=f"{correct}", width=50,
+                               bg="white",
+                               font=("Helvetica", 15, "bold"))
+        result_correct.place(x=30, y=75)
+
+        # Number of questions incorrect label
+        result_wrong = Label(result_frame, text=f"{wrong}", width=50,
+                             bg="white",
+                             font=("Helvetica", 15, "bold"))
+        result_wrong.place(x=30, y=125)
+
+        # Number of questions incorrect label
+        result_percent = Label(result_frame, text=f"{result}", width=50,
+                               bg="white",
+                               font=("Helvetica", 15, "bold"))
+        result_percent.place(x=30, y=175)
 
         # Exit button which quits whole quiz (need to alter in final version)
         quit_button = Button(result_frame, text="Exit",
@@ -160,11 +174,19 @@ class Quiz:
 
         # Return to main menu button restarts whole code
         export_button = Button(result_frame, text="Export Results",
-                               command=lambda: print("Export"),
+                               command=lambda: self.export(r_results.correct),
                                width=20, bg="orange",
                                font=("Helvetica", 16, "bold"))
         export_button.place(x=50, y=355)
+        print(correct)
+        print(wrong)
+        print(result)
 
-# Main routine
+    # Function used to export the result will contain the export program from
+    # the previous code
+    def export(self, final_score):
+        print("total correct ans:", final_score)
+
+
 quiz = Quiz()
 maori_q.mainloop()

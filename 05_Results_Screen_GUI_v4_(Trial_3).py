@@ -1,31 +1,19 @@
-"""" 05_Results_Screen_GUI_v1.py
+"""" 05_Results_Screen_GUI_v4_(Trial_3).py
 Begins the quiz for the user and gives them multiple choice answers
-Version #1 - In this version the code opens a result screen there are both an
-exit and export button however only the exit button works and on the result
-screen there is also none of the user's results shown, the export button does
-not work at all and needs to be more properly worked on.
+Version #4_(Trial_3) - Code has been altered so that the export button now
+saves to wherever the user likes on their computer, it creates a .txt file
+similar to trial 2 however this allows the user to decide where the file is
+saved whilst also allowing them to give the file a custom name. Lacks the user
+accessibility that can be found in trial 2.
 """
 
 from tkinter import *
-import json # Used as file to hold questions, and answers
-import random # To randomize quiz questions
+import json
+from tkinter import filedialog
+# .Json file needed to hold all the questions and answers
+import random  # Import this in order to randomize the questions
 from functools import partial  # To prevent unwanted windows
 import re
-
-# All the code needed to run the quiz Questions, options, and answers also this
-# allows the .JSON file to be randomized while keeping answers and questions
-# the same.
-maori_q = Tk()
-maori_q.title("Quiz")
-with open('quiz.JSON') as file:
-    obj = json.load(file)
-question = (obj['questions'])
-options = (obj['options'])
-ans = (obj['answers'])
-zi = zip(question, options, ans)
-lis = list(zi)
-random.shuffle(lis)
-question, options, ans = zip(*lis)
 
 
 class Quiz:
@@ -34,12 +22,11 @@ class Quiz:
         self.main_frame = Frame(width=650, height=450, bg="white",
                                 pady=0)
         self.main_frame.grid()
-        # Question number
+
         self.qnum = 1
         self.quest = StringVar()
         self.qn = 0
         self.ques = self.question(self.qn)
-        # radio buttons makes sure they run accordingly
         self.option_selected = IntVar()
         self.options = self.radiobtns()
         self.display_options(self.qn)
@@ -50,7 +37,7 @@ class Quiz:
     # This is the title of the quiz and also the question number
     def question(self, qn):
         # Title of quiz
-        title = Label(self.main_frame, text="Maori Quiz", width=50,
+        title = Label(self.main_frame, text="Māori Quiz", width=50,
                       bg="sky blue",
                       font=("Helvetica", 20, "bold"), pady=10)
         title.place(x=-100, y=0)
@@ -108,63 +95,98 @@ class Quiz:
     # If the answer is correct adds a point to the total correct score
     # (self.correct)
     def next_btn(self):
-        # Adds one to the number of correct for the user if correct, and also
-        # adds one to question number
         if self.check_ans(self.qn):
             self.correct += 1
         self.qn += 1
         self.qnum += 1
-        # Checks to see if the number of questions asked is the same as the
-        # number of questions there are, and if so calls the display_result
-        # function
         if self.qn == len(question):
-            self.display_result()
+            Display(self)
         else:
             self.quest.set(str(self.qnum) + ". " + question[self.qn])
             self.display_options(self.qn)
+    # Displays the result that the user has received displays this in a
+    # mini-box however and ideally needs to be on another page
 
-    # Calls the export class in order to carry on export screen code
-    def export(self, r_results):
-        Export(self, r_results)
 
-    def display_result(self):
+class Display:
+    def __init__(self, r_result):
+        # Stores the quiz results into variables
+        self.score = int(r_result.correct / len(question) * 100)
+        self.result = "Score: " + str(self.score) + "%"
+        wc = len(question) - r_result.correct
+        self.correct = "Number of correct answers: " + str(r_result.correct)
+        self.wrong = "Number of incorrect answers: " + str(wc)
         # Destroys previous screens
         maori_q.destroy()
-        # Stores the quiz results into variables
-        score = int(self.correct / len(question) * 100)
-        result = "Score:" + str(score) + "%"
-        wc = len(question) - self.correct
-        correct = "Number of correct answers:" + str(self.correct)
-        wrong = "Number if incorrect answers:" + str(wc)
         result_gui = Tk()
         # Test to show it runs new screen
         print("Results")
-        # Creating the result screen
         result_gui.title("Result screen")
-        # Makes the screen a set size
         result_gui.resizable(False, False)
-        result_gui.geometry("650x450")
-        result_frame = Frame(result_gui)
-        result_frame.pack(fill=BOTH, expand=YES)
-        # Main heading for the result screen
-        result_title = Label(result_frame, text="Results", width=50,
-                             bg="sky blue",
+        result_gui.geometry("650x350")
+        self.result_frame = Frame(result_gui, bg="white")
+        self.result_frame.pack(fill=BOTH, expand=YES)
+        # Result page title
+        result_title = Label(self.result_frame, text="Results of Māori Quiz",
+                             width=50, bg="sky blue",
                              font=("Helvetica", 20, "bold"), pady=10)
         result_title.place(x=-100, y=0)
 
+        # Return to main menu button restarts whole code
+        self.export_button = Button(self.result_frame, text="Export Results",
+                                    command=self.export,
+                                    width=20, bg="orange",
+                                    font=("Helvetica", 16, "bold"))
+        self.export_button.place(x=50, y=275)
+
+        # Number of questions correct label
+        result_correct = Label(self.result_frame, text=f"{self.correct}",
+                               width=50, bg="white",
+                               font=("Helvetica", 15, "bold"))
+        result_correct.place(x=30, y=75)
+
+        # Number of questions incorrect label
+        result_wrong = Label(self.result_frame, text=f"{self.wrong}", width=50,
+                             bg="white",
+                             font=("Helvetica", 15, "bold"))
+        result_wrong.place(x=30, y=125)
+
+        # Number of questions incorrect label
+        result_percent = Label(self.result_frame, text=f"{self.result}",
+                               width=50, bg="white",
+                               font=("Helvetica", 15, "bold"))
+        result_percent.place(x=30, y=175)
+
         # Exit button which quits whole quiz (need to alter in final version)
-        quit_button = Button(result_frame, text="Exit",
+        quit_button = Button(self.result_frame, text="Exit",
                              command=result_gui.destroy, width=10,
                              bg="red", font=("Helvetica", 16, "bold"))
-        quit_button.place(x=450, y=355)
+        quit_button.place(x=450, y=275)
 
-        # Return to main menu button restarts whole code
-        export_button = Button(result_frame, text="Export Results",
-                               command=lambda: print("Export"),
-                               width=20, bg="orange",
-                               font=("Helvetica", 16, "bold"))
-        export_button.place(x=50, y=355)
+    def export(self):
+        filename = filedialog.asksaveasfilename(initialdir='/desktop',
+                                                title='Save File',
+                                                defaultextension=".txt")
+        my_file = open(filename, "w+", encoding="utf-8")
+        my_file.write(f"Results - "
+                      f"\n{self.result} \n{self.correct} \n{self.wrong}")
 
-# Main routine
+
+# All the code needed to run the quiz Questions, options, and answers also this
+# allows the .JSON file to be randomized while keeping answers and questions
+# the same.
+maori_q = Tk()
+maori_q.title("Māori Quiz")
+with open('quiz.JSON') as file:
+    obj = json.load(file)
+question = (obj['questions'])
+options = (obj['options'])
+ans = (obj['answers'])
+zi = zip(question, options, ans)
+lis = list(zi)
+random.shuffle(lis)
+question, options, ans = zip(*lis)
+
+# main routine
 quiz = Quiz()
 maori_q.mainloop()
